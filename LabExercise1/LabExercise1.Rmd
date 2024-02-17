@@ -10,96 +10,62 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(rvest)
 library(polite)
+library(rvest)
+library(dplyr)
+library(stringr)
 
-url1<- "https://www.amazon.com/Brother-Monochrome-MFCL5700DW-MFCL5705DW-Additional/dp/B0C6CQQPVC/ref=sr_1_1_sspa?qid=1707351310&s=computers-intl-ship&sr=1-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGZfYnJvd3Nl&th=1"
+url1<- "https://www.amazon.com/s?k=printer&crid=9GOL752KGHUP&sprefix=printer%2Caps%2C470&ref=nb_sb_ss_ts-doa-p_1_7"
+url2<- "https://www.amazon.com/s?k=printer&page=2&crid=9GOL752KGHUP&qid=1708174494&sprefix=printer%2Caps%2C470&ref=sr_pg_2"
+url3<- "https://www.amazon.com/s?k=printer&page=3&crid=9GOL752KGHUP&qid=1708174514&sprefix=printer%2Caps%2C470&ref=sr_pg_3"
 
-session <- bow(url1, 
-               user_agent = "Educational purposes")
-session
+session1<- bow(url1, user_agent = "Educational purposes")
+session2<- bow(url2, user_agent = "Educational purposes")
+session3<- bow(url3, user_agent = "Educational purposes")
+session3<- bow(url3, user_agent = "Educational purposes")
 
-session_page <- scrape(session)
+session1
+session2
+session3
 
-```
-```{r}
-printer_url1 <- read_html(url1)
-
-#scrape for the name of the product
-printername1 <- printer_url1 %>%
-  html_nodes("h1.a-size-large.a-spacing-none") %>%
-  html_text
-printername1
-
-#scrape the price
-printerprice1 <- printer_url1 %>%
-  html_nodes("span.a-price.aok-align-center.reinventPricePriceToPayMargin") %>%
-  html_text()
-printerprice1
-
-#Scrape the ratings
-printerratings1 <- printer_url1 %>%
-  html_nodes("i.a-icon.a-icon-star.a-star-4.cm-cr-review-stars-spacing-big") %>%
-  html_text()
-printerratings1
-
-#scrape the total reviews
-printertotalrev1 <- printer_url1 %>%
-  html_nodes("span#acrCustomerReviewText.a-size-base") %>%
-  html_text()
-printertotalrev1
-
-#merge it in a data frame
-data_Frame1 <- data.frame(
-  Product_Name = printername1,
-  Price = printerprice1,
-  Ratings = printerratings1,
-  Reviews = printertotalrev1
-)
-data_Frame1
 ```
 
 ```{r}
-library(rvest)
-library(polite)
+printer1URL<-read_html(url1)
+printer2URL<-read_html(url2)
+printer3URL<-read_html(url3)
+```
 
-url2<- "https://www.amazon.com/Canon-TR4723-Wireless-Inkjet-Printer/dp/B0CQLQ6S7T/ref=sr_1_2_sspa?qid=1707356088&s=computers-intl-ship&sr=1-2-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGZfYnJvd3Nl&th=1"
+#scraping names and making a data frames
+```{r}
+session_page1 <- scrape(session1)
 
-printer_url2 <- read_html(url2)
-
-#scrape for the name of the product
-printername2 <- printer_url2 %>%
-  html_nodes("h1.a-size-large.a-spacing-none") %>%
-  html_text
-printername2
-
-#scrape the price
-printerprice2 <- printer_url2 %>%
-  html_nodes("span.a-price.aok-align-center.reinventPricePriceToPayMargin.priceToPay") %>%
+printerName1 <- printer1URL %>%
+  html_nodes("span.a-size-medium.a-color-base.a-text-normal")%>%
   html_text()
-printerprice2
+printerName1
 
-#Scrape the ratings
-printerratings2 <- printer_url2 %>%
-  html_nodes("i.a-icon.a-icon-star.a-star-4.cm-cr-review-stars-spacing-big") %>%
+```
+
+```{r}
+session_page2 <- scrape(session2)
+
+printerName2 <- printer2URL %>%
+  html_nodes("span.a-size-medium.a-color-base.a-text-normal")%>%
   html_text()
-printerratings2
+printerName2
 
-#scrape the total reviews
-printertotalrev2 <- printer_url2 %>%
-  html_nodes("span#acrCustomerReviewText.a-size-base") %>%
+```
+
+```{r}
+session_page3 <- scrape(session3)
+
+printerName3<- printer3URL %>%
+  html_nodes("span.a-size-medium.a-color-base.a-text-normal")%>%
   html_text()
-printertotalrev2
+printerName3
 
-#merge it in a data frame
+```
 
-data_Frame2 <- data.frame(
-  ProductName = printername2,
-  Price = printerprice2,
-  Ratings = printerratings2,
-  Reviews = printertotalrev2
-  
-)
-data_Frame2
-
+#merging data frames into one row
 ```
