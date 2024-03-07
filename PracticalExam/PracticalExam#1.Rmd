@@ -1,0 +1,84 @@
+---
+title: "PracticalExam"
+author: "Erikka Jane Parrenas"
+date: "2024-03-07"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#A. Load the built-in warpbreaks dataset.
+#1a. Find out, in a single command, which columns of warpbreaks are either numeric or integer. What are the data types of each column?
+  summary(warpbreaks)
+
+data("warpbreaks")
+warpbreaks
+```
+```{r}
+#1a. Find out, in a single command, which columns of warpbreaks are either numeric or integer. What are the data types of each column?
+typeof(warpbreaks$breaks)
+typeof(warpbreaks$wool)
+typeof(warpbreaks$tension) 
+
+# column wool and tension are integers.
+# while column breaks are double
+```
+#2a. How many observations does it have?
+#it has 54 observations
+
+#3a. Is numeric a natural data type for the columns which are stored as such? Convert to integer when necessary.
+#yes
+
+
+```{r}
+#B. Load the exampleFile.txt
+#1b. Read the complete file using readLines.
+
+file <- file("exampleFile.txt")
+
+  readExamFile <- readLines(file) 
+  readExamFile
+```
+```{r}
+#2b. Separate the vector of lines into a vector containing comments and a vector containing the data. Hint: use grepl.
+comment <- readExamFile[grepl("^//", readExamFile)]
+comment
+
+vec <- readExamFile[grepl("^//", readExamFile)]
+vec
+```
+```{r}
+#3b
+subsetCom <- comment[1]
+
+date <- gsub("// Survey data. Created :", "", subsetCom)
+date
+
+cat("It was created,", date)
+```
+```{r}
+#B4a
+vec_Split <- (strsplit(vec, ";"))
+vec_Split
+```
+
+```{r}
+#B4b
+max_Vec <- max(length(vec_Split))
+max_Vec
+
+appendRow <- lapply(vec_Split, function(x) c(x,rep(NA, max_Vec - length(x))))
+appendRow
+```
+```{r}
+#B4c
+unlisDat <- unlist(appendRow)
+unlisDat
+
+dat_matrix <- matrix(unlisDat, ncol = 4, nrow = 3, 
+                     dimnames = list (c("row1", "row2", "row3")))
+dat_matrix
+```
