@@ -14,43 +14,51 @@ library(polite)
 library(rvest)
 library(dplyr)
 library(stringr)
+library(httr)
 
-url1<- "https://www.amazon.com/s?k=printer&crid=9GOL752KGHUP&sprefix=printer%2Caps%2C470&ref=nb_sb_ss_ts-doa-p_1_7"
-url2<- "https://www.amazon.com/s?k=printer&page=2&crid=9GOL752KGHUP&qid=1708174494&sprefix=printer%2Caps%2C470&ref=sr_pg_2"
-url3<- "https://www.amazon.com/s?k=printer&page=3&crid=9GOL752KGHUP&qid=1708174514&sprefix=printer%2Caps%2C470&ref=sr_pg_3"
+#1st page
+url1 <- "https://www.amazon.com.au/s?k=printer&crid=2610LYUDBZE3A&sprefix=printer%2Caps%2C308&ref=nb_sb_noss_1"
+session1 <- bow(url1, user_agent = "Educational purposes")
 
-session1<- bow(url1, user_agent = "Educational purposes")
-session2<- bow(url2, user_agent = "Educational purposes")
-session3<- bow(url3, user_agent = "Educational purposes")
-session3<- bow(url3, user_agent = "Educational purposes")
+printer1url <-read_html(url1)
 
-session1
-session2
-session3
 
+#2nd page
+printer2url <- "https://www.amazon.com.au/s?k=printer&page=2&crid=2610LYUDBZE3A&qid=1709542185&sprefix=printer%2Caps%2C308&ref=sr_pg_2"
+session2 <- bow(url2, user_agent = "Educational purposes")
+
+
+#3rd page
+printer3url <- "https://www.amazon.com.au/s?k=printer&page=3&crid=2610LYUDBZE3A&qid=1709542194&sprefix=printer%2Caps%2C308&ref=sr_pg_3"
+session3 <- bow(url3, user_agent = "Educational purposes")
+
+#4th page
+printer4url <-"https://www.amazon.com.au/s?k=printer&page=4&crid=2610LYUDBZE3A&qid=1709542297&sprefix=printer%2Caps%2C308&ref=sr_pg_4"
+session4 <- bow(url4, user_agent = "Educational purposes")
+
+
+#5th page
+printer5url <-"https://www.amazon.com.au/s?k=printer&page=5&crid=2610LYUDBZE3A&qid=1709542332&sprefix=printer%2Caps%2C308&ref=sr_pg_5"
+session5 <- bow(url5, user_agent = "Educational purposes")
 ```
 
-```{r}
-printer1URL<-read_html(url1)
-printer2URL<-read_html(url2)
-printer3URL<-read_html(url3)
-```
 
-#scraping names and making a data frames
 ```{r}
+#scraping names of products
+library(rvest)
+
 session_page1 <- scrape(session1)
 
-printerName1 <- printer1URL %>%
+printerName1 <- printer1url %>%
   html_nodes("span.a-size-medium.a-color-base.a-text-normal")%>%
   html_text()
 printerName1
-
 ```
 
 ```{r}
 session_page2 <- scrape(session2)
 
-printerName2 <- printer2URL %>%
+printerName2 <- printer2url %>%
   html_nodes("span.a-size-medium.a-color-base.a-text-normal")%>%
   html_text()
 printerName2
@@ -60,12 +68,140 @@ printerName2
 ```{r}
 session_page3 <- scrape(session3)
 
-printerName3<- printer3URL %>%
+printerName3 <- printer3url %>%
   html_nodes("span.a-size-medium.a-color-base.a-text-normal")%>%
   html_text()
 printerName3
+```
+
+```{r}
+session_page4 <- scrape(session4)
+
+printerName4 <- printer4url %>%
+  html_nodes("span.a-size-medium.a-color-base.a-text-normal")%>%
+  html_text()
+printerName4
+```
+
+```{r}
+session_page5 <- scrape(session5)
+
+printerName5 <- printer5url %>%
+  html_nodes("span.a-size-medium.a-color-base.a-text-normal")%>%
+  html_text()
+printerName5
+
+#subset the page5 to get exactly 100 products
+sub_printerName5 <- printerName5[1:12]
+sub_printerName5
+```
+
+```{r}
+#make each page into data frames
+page1priName <- data.frame(Name = printerName1)
+page2priName <- data.frame(Name = printerName2)
+page3priName <- data.frame(Name = printerName3)
+page4priName <- data.frame(Name = printerName4)
+page5priName <- data.frame(Name = sub_printerName5)
+page1priName
+page2priName
+page3priName
+page4priName
+page5priName
+```
+
+```{r}
+# Combine data frames
+df_names <- rbind(page1priName,
+                  page2priName,
+                  page3priName,
+                  page4priName,
+                  page5priName)
+df_names
+```
+
+```{r}
+# Geting the price of first 22 product
+printerPrice1 <- printer1URL %>%
+  html_nodes("span.a-price")%>%
+  html_text()
+printerPrice1
+
+first_price <- str_extract(printerPrice1[1:22], "\\$[0-9.]+")
+first_price
+
+price1 <- data.frame(Price = first_price)
+price1
 
 ```
 
-#merging data frames into one row
+```{r}
+# Geting the price of second 22 product
+printerPrice2 <- printer2URL %>%
+  html_nodes("span.a-price")%>%
+  html_text()
+printerPrice2
+
+second_price <- str_extract(printerPrice2[1:22], "\\$[0-9.]+")
+second_price
+
+#make it a data frame
+price2 <- data.frame(Price = second_price)
+price2
+
+```
+```{r}
+# Geting the price of third 22 product
+printerPrice3 <- printer3URL %>%
+  html_nodes("span.a-price")%>%
+  html_text()
+printerPrice3
+
+third_price <- str_extract(printerPrice3[1:22], "\\$[0-9.]+")
+third_price
+
+#make it a data frame
+price3 <- data.frame(Price = third_price)
+price3
+
+```
+
+```{r}
+# Geting the price of fourth 22 product
+printerPrice4 <- printer4URL %>%
+  html_node("span.a-price")%>%
+  html_text()
+printerPrice4
+
+fourth_price <- str_extract(printerPrice4[1:22], "\\$[0-9.]+")
+fourth_price
+
+#make it a data frame
+price4 <- data.frame(Price = fourth_price)
+price4
+
+```
+```{r}
+# Geting the price of fifth 22 product
+printerPrice5 <- printer5URL %>%
+  html_nodes("span.a-price")%>%
+  html_text()
+printerPrice5
+
+fifth_price <- str_extract(printerPrice5[1:12], "\\$[0-9.]+")
+fifth_price
+
+#make it a data frame
+price5 <- data.frame(Price = fifth_price)
+price5
+
+```
+```{r}
+# Combine data frames
+df_price <- rbind(price1,
+                  price2,
+                  price3,
+                  price4,
+                  price5)
+df_price
 ```
