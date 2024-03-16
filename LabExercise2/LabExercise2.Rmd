@@ -1242,8 +1242,1547 @@ write.csv(moviesRev3456, "IMDBmoviesReviews(2nd_200).csv")
 
 read.csv("IMDBmoviesReviews(2nd_200).csv")
 ```
+```{r}
+library(polite)
+library(rvest)
+
+#7th movie url for the the name of the reviewer.
+movie7_url <- "https://www.imdb.com/title/tt15009428/reviews?sort=curated&dir=desc&ratingFilter=0"
+session_Mov7 <- bow(movie7_url, user_agent = "educational purposes")
+
+movie7 <- read_html(movie7_url)
+
+movie7_url2 <- "https://www.imdb.com/title/tt14230458/reviews?sort=curated&dir=asc&ratingFilter=0"
+session_Mov7_2 <- bow(movie7_url2, user_agent = "educational purposes")
+
+movie7_2 <- read_html(movie7_url2)
+```
+
+```{r}
+#geting the 7th movie title to include it for the data frame.
+(seventh_title <- sub_movie[7])
+
+#get the reviewer's name.
+reviewer7 <- movie7 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer7
+
+#set as data frame
+(df_reviewer7 <- data.frame(Name = reviewer7))
+```
+
+```{r}
+#get the reviewer's name.
+reviewer7_2 <- movie7_2 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer7_2
+
+#set as data frame
+(df_reviewer7_2 <- data.frame(Name = reviewer7_2))
+```
+
+```{r}
+#combine into one row
+(nameRev7 <- rbind(df_reviewer7, df_reviewer7_2)) 
+```
+
+```{r}
+#get the the date of reviews
+reviews_date7 <- movie7 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame
+(df_reviewsDate7 <- data.frame(DateReview = reviews_date7))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date7_2 <- movie7_2 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame 
+(df_reviewsDate7_2 <- data.frame(DateReview = reviews_date7_2))
+```
+
+```{r}
+#combine into one row
+(dateRev7 <- rbind(df_reviewsDate7, df_reviewsDate7_2)) 
+```
+
+```{r}
+#get the user ratings
+reviews_rating7 <- movie7 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating7
+
+#subset the ratings to get only 25
+(sub_reviewsRating7 <- reviews_rating7[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split7 <- unlist(strsplit(sub_reviewsRating7, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate7 <- rate_split7[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating7 <- data.frame (Rating = splitRate7))
+```
+
+```{r}
+#get the user ratings
+reviews_rating7_2 <- movie7_2 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating7_2
+
+#subset the ratings to get only 25
+(sub_reviewsRating7_2 <- reviews_rating7_2[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split7_2 <- unlist(strsplit(sub_reviewsRating7_2, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate7_2 <- rate_split7_2[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating7_2 <- data.frame (Rating = splitRate7_2))
+```
+
+```{r}
+#combine into one row
+(rating7 <- rbind(df_rating7,df_rating7_2))
+```
+
+```{r}
+#get the contents of the reviews
+review_text7 <- movie7 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text7
+
+#set as data frame.
+(df_reviewText7 <- data.frame(TextReview = review_text7))
+```
+
+```{r}
+#get the contents of the reviews
+review_text7_2 <- movie7_2 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text7_2
+
+#set as data frame.
+(df_reviewText7_2 <- data.frame(TextReview = review_text7_2))
+```
+
+```{r}
+#cobine into one row
+(textRev7 <- rbind(df_reviewText7, df_reviewText7_2))
+```
+
+```{r}
+#get the review title.
+review_title7 <- movie7 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title7
+
+#subset the review title get only 25
+(sub_titrev7 <- review_title7[1:25])
+
+(review_split7 <- unlist(strsplit(sub_titrev7, "\n")))
+
+#set as data frame
+(df_reviewTitle7 <- data.frame(TitleReview = review_split7))
+```
+
+```{r}
+#get the review title.
+review_title7_2 <- movie7_2 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title7_2
+
+#subset the review title get only 25
+(sub_titrev7_2 <- review_title7_2[1:25])
+
+(review_split7_2 <- unlist(strsplit(sub_titrev7_2, "\n")))
+#set as data frame
+(df_reviewTitle7_2 <- data.frame(TitleReview = review_split7_2))
+```
+
+```{r}
+(titleRev7 <- rbind(df_reviewTitle7, df_reviewTitle7_2))
+```
+
+```{r}
+#combined the outputs of the first movie in a data frame
+(df_movie7 <- data.frame(Title = seventh_title,
+                        nameRev7,
+                        rating7,                    
+                        dateRev7,
+                        textRev7,
+                        titleRev7)
+)
+```
+
+```{r}
+library(polite)
+library(rvest)
+
+#8th movie url for the the name of the reviewer.
+movie8_url <- "https://www.imdb.com/title/tt15398776/reviews?sort=curated&dir=desc&ratingFilter=0"
+session_Mov8 <- bow(movie8_url, user_agent = "educational purposes")
+
+movie8 <- read_html(movie8_url)
+
+movie8_url2 <- "https://www.imdb.com/title/tt15398776/reviews?sort=curated&dir=asc&ratingFilter=0"
+session_Mov8_2 <- bow(movie8_url2, user_agent = "educational purposes")
+
+movie8_2 <- read_html(movie8_url2)
+```
+
+```{r}
+#geting the 8th movie title to include it for the data frame.
+(eight_title <- sub_movie[8])
+
+#get the reviewer's name.
+reviewer8 <- movie8 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer8
+
+#set as data frame
+(df_reviewer8 <- data.frame(Name = reviewer8))
+```
+
+```{r}
+#get the reviewer's name.
+reviewer8_2 <- movie8_2 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer8_2
+
+#set as data frame
+(df_reviewer8_2 <- data.frame(Name = reviewer8_2))
+```
+
+```{r}
+#combine the output into one row
+(nameRev8 <- rbind(df_reviewer8,df_reviewer8_2))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date8 <- movie8 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame
+(df_reviewsDate8 <- data.frame(DateReview = reviews_date8))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date8_2 <- movie8_2 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame 
+(df_reviewsDate8_2 <- data.frame(DateReview = reviews_date8_2))
+```
+
+```{r}
+#combine the output into one row
+(dateRev8 <- rbind(df_reviewsDate8, df_reviewsDate8_2))
+```
+
+```{r}
+#get the user ratings
+reviews_rating8 <- movie8 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
 
 
+#subset the ratings to get only 25
+(sub_reviewsRating8 <- reviews_rating8[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split8 <- unlist(strsplit(sub_reviewsRating8, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate8 <- rate_split8[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating8 <- data.frame (Rating = splitRate8))
+```
+
+```{r}
+#get the user ratings
+reviews_rating8_2 <- movie8_2 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+
+#subset the ratings to get only 25
+(sub_reviewsRating8_2 <- reviews_rating8_2[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split8_2 <- unlist(strsplit(sub_reviewsRating8_2, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate8_2 <- rate_split8_2[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating8_2 <- data.frame (Rating = splitRate8_2))
+```
+
+```{r}
+#combine into one row
+(rating8 <- rbind(df_rating4,df_rating8_2))
+```
+
+```{r}
+#get the contents of the reviews
+review_text8 <- movie8 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text8
+
+#set as data frame.
+(df_reviewText8 <- data.frame(TextReview = review_text8))
+```
+```{r}
+#get the contents of the reviews
+review_text8_2 <- movie8_2 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text8_2
+
+#set as data frame.
+(df_reviewText8_2 <- data.frame(TextReview = review_text8_2))
+```
+
+```{r}
+#combine into one frame
+(textRev8 <- rbind(df_reviewText8,df_reviewText8_2))
+```
+
+```{r}
+#get the review title.
+review_title8 <- movie8 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title8
+
+#subset the review title get only 25
+(sub_titrev8 <- review_title8[1:25])
+
+(review_split8 <- unlist(strsplit(sub_titrev8, "\n")))
+
+#set as data frame
+(df_reviewTitle8 <- data.frame(TitleReview = review_split8))
+```
+
+```{r}
+#get the review title.
+review_title8_2 <- movie8_2 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title8_2
+
+#subset the review title get only 25
+(sub_titrev8_2 <- review_title8_2[1:25])
+
+(review_split8_2 <- unlist(strsplit(sub_titrev8_2, "\n")))
+
+#set as data frame
+(df_reviewTitle8_2 <- data.frame(TitleReview = review_split8_2))
+```
+
+```{r}
+#combine into one row
+(titleRev8 <- rbind(df_reviewTitle8, df_reviewTitle8_2))
+```
+
+```{r}
+#combined the outputs of the first movie in a data frame
+(df_movie8 <- data.frame(Title = eight_title,
+                        nameRev8,
+                        rating8,                    
+                        dateRev8,
+                        textRev8,
+                        titleRev8)
+)
+```
+
+```{r}
+library(polite)
+library(rvest)
+
+#9th movie url for the the name of the reviewer.
+movie9_url <- "https://www.imdb.com/title/tt21692408/reviews?sort=curated&dir=asc&ratingFilter=0"
+session_Mov9 <- bow(movie9_url, user_agent = "educational purposes")
+
+movie9 <- read_html(movie9_url)
+
+movie9_url2 <- "https://www.imdb.com/title/tt0087182/reviews?sort=curated&dir=desc&ratingFilter=9"
+session_Mov9_2 <- bow(movie9_url2, user_agent = "educational purposes")
+
+movie9_2 <- read_html(movie9_url2)
+```
+
+```{r}
+#geting the 9th movie title to include it for the data frame.
+(nineth_title <- sub_movie[9])
+
+#get the reviewer's name.
+reviewer9 <- movie9 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer9
+
+#set as data frame
+(df_reviewer9 <- data.frame(Name = reviewer9))
+```
+
+```{r}
+#get the reviewer's name.
+reviewer9_2 <- movie9_2 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer9_2
+
+#set as data frame
+(df_reviewer9_2 <- data.frame(Name = reviewer9_2))
+```
+
+```{r}
+#combine the output into one row
+(nameRev9 <- rbind(df_reviewer9,df_reviewer9_2))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date9 <- movie9 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame
+(df_reviewsDate9 <- data.frame(DateReview = reviews_date9))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date9_2 <- movie9_2 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame 
+(df_reviewsDate9_2 <- data.frame(DateReview = reviews_date9_2))
+
+#combine the output into one row
+(dateRev9 <- rbind(df_reviewsDate9, df_reviewsDate9_2))
+```
+
+```{r}
+#get the user ratings
+reviews_rating9 <- movie9 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating9
+
+#subset the ratings to get only 25
+(sub_reviewsRating9 <- reviews_rating5[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split9 <- unlist(strsplit(sub_reviewsRating5, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate9 <- rate_split9[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating9 <- data.frame (Rating = splitRate9))
+```
+
+```{r}
+#get the user ratings
+reviews_rating9_2 <- movie9_2 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating9_2
+
+#subset the ratings to get only 25
+(sub_reviewsRating9_2 <- reviews_rating9_2[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split9_2 <- unlist(strsplit(sub_reviewsRating9_2, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate9_2 <- rate_split9_2[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating9_2 <- data.frame (Rating = splitRate9_2))
+```
+
+```{r}
+#combine into one row
+(rating9 <- rbind(df_rating9,df_rating9_2))
+```
+
+```{r}
+#get the contents of the reviews
+review_text9 <- movie9 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text9
+
+#set as data frame.
+(df_reviewText9 <- data.frame(TextReview = review_text9))
+```
+
+```{r}
+#get the contents of the reviews
+review_text9_2 <- movie9_2 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text9_2
+
+#set as data frame.
+(df_reviewText9_2 <- data.frame(TextReview = review_text9_2))
+```
+
+```{r}
+#combine into one frame
+(textRev9 <- rbind(df_reviewText9,df_reviewText9_2))
+```
+
+```{r}
+#get the review title.
+review_title9 <- movie9 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title9
+
+#subset the review title get only 25
+(sub_titrev9 <- review_title5[1:25])
+
+(review_split9 <- unlist(strsplit(sub_titrev9, "\n")))
+
+#set as data frame
+(df_reviewTitle9 <- data.frame(TitleReview = review_split9))
+```
+
+```{r}
+#get the review title.
+review_title9_2 <- movie9_2 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title9_2
+
+#subset the review title get only 25
+(sub_titrev9_2 <- review_title9_2[1:25])
+
+(review_split9_2 <- unlist(strsplit(sub_titrev9_2, "\n")))
+
+#set as data frame
+(df_reviewTitle9_2 <- data.frame(TitleReview = review_split9_2))
+```
+
+```{r}
+#combine into one row
+(titleRev9 <- rbind(df_reviewTitle9, df_reviewTitle9_2))
+```
+
+```{r}
+#combined the outputs of the first movie in a data frame
+(df_movie9 <- data.frame(Title = nineth_title,
+                        nameRev9,
+                        rating9,                    
+                        dateRev9,
+                        textRev9,
+                        titleRev9)
+)
+```
+
+```{r}
+library(polite)
+library(rvest)
+
+#10th movie url for the the name of the reviewer.
+movie10_url <- "https://www.imdb.com/title/tt26047818/reviews?sort=curated&dir=asc&ratingFilter=0"
+session_Mov10 <- bow(movie10_url, user_agent = "educational purposes")
+
+movie10 <- read_html(movie10_url)
+
+movie10_url2 <- "https://www.imdb.com/title/tt26047818/reviews?sort=curated&dir=desc&ratingFilter=0"
+session_Mov10_2 <- bow(movie10_url, user_agent = "educational purposes")
+
+movie10_2 <- read_html(movie10_url2)
+```
+
+```{r}
+#geting the 10th movie title to include it for the data frame.
+(tenth_title <- sub_movie[10])
+
+#get the reviewer's name.
+reviewer10 <- movie10 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer10
+
+#set as data frame
+(df_reviewer10 <- data.frame(Name = reviewer10))
+```
+
+```{r}
+#get the reviewer's name.
+reviewer10_2 <- movie10_2 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer10_2
+
+#set as data frame
+(df_reviewer10_2 <- data.frame(Name = reviewer10_2))
+```
+
+```{r}
+#combine the output into one row
+(nameRev10 <- rbind(df_reviewer10,df_reviewer10_2))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date10 <- movie10 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame
+(df_reviewsDate10 <- data.frame(DateReview = reviews_date10))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date10_2 <- movie10_2 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame 
+(df_reviewsDate10_2 <- data.frame(DateReview = reviews_date10_2))
+```
+
+```{r}
+#combine the output into one row
+(dateRev10 <- rbind(df_reviewsDate10, df_reviewsDate10_2))
+```
+
+```{r}
+#get the user ratings
+reviews_rating10 <- movie10 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating10
+
+#subset the ratings to get only 25
+(sub_reviewsRating10 <- reviews_rating10[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split10 <- unlist(strsplit(sub_reviewsRating10, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate10 <- rate_split10[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating10 <- data.frame (Rating = splitRate6))
+```
+
+```{r}
+#get the user ratings
+reviews_rating10_2 <- movie10_2 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating10_2
+
+#subset the ratings to get only 25
+(sub_reviewsRating10_2 <- reviews_rating10_2[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split10_2 <- unlist(strsplit(sub_reviewsRating10_2, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate10_2 <- rate_split10_2[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating10_2 <- data.frame (Rating = splitRate10_2))
+```
+
+```{r}
+#combine into one row
+(rating10 <- rbind(df_rating10,df_rating10_2))
+```
+
+```{r}
+#get the contents of the reviews
+review_text10 <- movie10 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text10
+
+#set as data frame.
+(df_reviewText10 <- data.frame(TextReview = review_text10))
+```
+
+
+```{r}
+#get the contents of the reviews
+review_text10_2 <- movie10_2 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text10_2
+
+#set as data frame.
+(df_reviewText10_2 <- data.frame(TextReview = review_text10_2))
+```
+
+```{r}
+#combine into one frame
+(textRev10 <- rbind(df_reviewText10,df_reviewText10_2))
+```
+
+```{r}
+#get the review title.
+review_title10 <- movie10 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title10
+
+#subset the review title get only 25
+(sub_titrev10 <- review_title10[1:25])
+
+(review_split10 <- unlist(strsplit(sub_titrev10, "\n")))
+
+#set as data frame
+(df_reviewTitle10 <- data.frame(TitleReview = review_split10))
+```
+
+```{r}
+#get the review title.
+review_title10_2 <- movie10_2 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title10_2
+
+#subset the review title get only 25
+(sub_titrev10_2 <- review_title10_2[1:25])
+
+(review_split10_2 <- unlist(strsplit(sub_titrev10_2, "\n")))
+
+#set as data frame
+(df_reviewTitle10_2 <- data.frame(TitleReview = review_split10_2))
+```
+
+```{r}
+#combine into one row
+(titleRev10 <- rbind(df_reviewTitle10, df_reviewTitle10_2))
+```
+
+```{r}
+#combined the outputs of the first movie in a data frame
+(df_movie10 <- data.frame(Title = tenth_title,
+                        nameRev10,
+                        rating10,                    
+                        dateRev10,
+                        textRev10,
+                        titleRev10)
+)
+```
+
+```{r}
+moviesRev78910 <- rbind(df_movie7, df_movie8, df_movie9, df_movie10)
+moviesRev78910
+```
+
+
+```{r}
+write.csv(moviesRev78910, "IMDBmoviesReviews(3rd_200).csv")
+
+read.csv("IMDBmoviesReviews(3rd_200).csv")
+```
+```{r}
+library(polite)
+library(rvest)
+
+#11th movie url for the the name of the reviewer.
+movie11_url <- "https://www.imdb.com/title/tt1660648/reviews?sort=curated&dir=asc&ratingFilter=0"
+session_Mov11 <- bow(movie11_url, user_agent = "educational purposes")
+
+movie11 <- read_html(movie11_url)
+
+movie11_url2 <- "https://www.imdb.com/title/tt1660648/reviews?sort=curated&dir=desc&ratingFilter=0"
+session_Mov11_2 <- bow(movie11_url2, user_agent = "educational purposes")
+
+movie11_2 <- read_html(movie11_url2)
+```
+
+```{r}
+#geting the 11th movie title to include it for the data frame.
+(eleventh_title <- sub_movie[11])
+
+#get the reviewer's name.
+reviewer11 <- movie11 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer11
+
+#set as data frame
+(df_reviewer11 <- data.frame(Name = reviewer11))
+```
+
+```{r}
+#get the reviewer's name.
+reviewer11_2 <- movie11_2 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer11_2
+
+#set as data frame
+(df_reviewer11_2 <- data.frame(Name = reviewer11_2))
+```
+
+```{r}
+#combine into one row
+(nameRev11 <- rbind(df_reviewer11, df_reviewer11_2)) 
+```
+
+```{r}
+#get the the date of reviews
+reviews_date11 <- movie11 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame
+(df_reviewsDate11 <- data.frame(DateReview = reviews_date11))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date11_2 <- movie11_2 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame 
+(df_reviewsDate11_2 <- data.frame(DateReview = reviews_date11_2))
+```
+
+```{r}
+#combine into one row
+(dateRev11 <- rbind(df_reviewsDate11, df_reviewsDate11_2)) 
+```
+
+```{r}
+#get the user ratings
+reviews_rating11 <- movie11 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating11
+
+#subset the ratings to get only 25
+(sub_reviewsRating11 <- reviews_rating11[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split11 <- unlist(strsplit(sub_reviewsRating11, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate11 <- rate_split11[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating11 <- data.frame (Rating = splitRate11))
+```
+
+```{r}
+#get the user ratings
+reviews_rating11_2 <- movie11_2 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating11_2
+
+#subset the ratings to get only 25
+(sub_reviewsRating11_2 <- reviews_rating11_2[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split11_2 <- unlist(strsplit(sub_reviewsRating11_2, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate11_2 <- rate_split11_2[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating11_2 <- data.frame (Rating = splitRate11_2))
+```
+
+```{r}
+#combine into one row
+(rating11 <- rbind(df_rating11,df_rating11_2))
+```
+
+```{r}
+#get the contents of the reviews
+review_text11 <- movie11 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text11
+
+#set as data frame.
+(df_reviewText11 <- data.frame(TextReview = review_text11))
+```
+
+```{r}
+#get the contents of the reviews
+review_text11_2 <- movie11_2 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text11_2
+
+#set as data frame.
+(df_reviewText11_2 <- data.frame(TextReview = review_text11_2))
+```
+
+```{r}
+#cobine into one row
+(textRev11 <- rbind(df_reviewText11, df_reviewText11_2))
+```
+
+```{r}
+#get the review title.
+review_title11 <- movie11 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title11
+
+#subset the review title get only 25
+(sub_titrev11 <- review_title11[1:25])
+
+(review_split11 <- unlist(strsplit(sub_titrev11, "\n")))
+
+#set as data frame
+(df_reviewTitle11 <- data.frame(TitleReview = review_split11))
+```
+
+```{r}
+#get the review title.
+review_title11_2 <- movie11_2 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title11_2
+
+#subset the review title get only 25
+(sub_titrev11_2 <- review_title11_2[1:25])
+
+(review_split11_2 <- unlist(strsplit(sub_titrev11_2, "\n")))
+#set as data frame
+(df_reviewTitle11_2 <- data.frame(TitleReview = review_split11_2))
+```
+
+```{r}
+(titleRev11 <- rbind(df_reviewTitle11, df_reviewTitle11_2))
+```
+
+```{r}
+#combined the outputs of the first movie in a data frame
+(df_movie11 <- data.frame(Title = eleventh_title,
+                        nameRev11,
+                        rating11,                    
+                        dateRev11,
+                        textRev11,
+                        titleRev11)
+)
+```
+
+```{r}
+library(polite)
+library(rvest)
+
+#12th movie url for the the name of the reviewer.
+movie12_url <- "https://www.imdb.com/title/tt7160372/reviews?sort=curated&dir=desc&ratingFilter=8"
+session_Mov12 <- bow(movie12_url, user_agent = "educational purposes")
+
+movie12 <- read_html(movie12_url)
+
+movie12_url2 <- "https://www.imdb.com/title/tt7160372/reviews?sort=curated&dir=desc&ratingFilter=0"
+session_Mov12_2 <- bow(movie12_url2, user_agent = "educational purposes")
+
+movie12_2 <- read_html(movie12_url2)
+```
+
+```{r}
+#geting the 12th movie title to include it for the data frame.
+(twelveth_title <- sub_movie[12])
+
+#get the reviewer's name.
+reviewer12 <- movie12 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer12
+
+#set as data frame
+(df_reviewer12 <- data.frame(Name = reviewer12))
+```
+
+```{r}
+#get the reviewer's name.
+reviewer12_2 <- movie12_2 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer12_2
+
+#set as data frame
+(df_reviewer12_2 <- data.frame(Name = reviewer12_2))
+```
+
+```{r}
+#combine the output into one row
+(nameRev12 <- rbind(df_reviewer12,df_reviewer12_2))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date12 <- movie12 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame
+(df_reviewsDate12 <- data.frame(DateReview = reviews_date12))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date12_2 <- movie12_2 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame 
+(df_reviewsDate12_2 <- data.frame(DateReview = reviews_date12_2))
+```
+
+```{r}
+#combine the output into one row
+(dateRev12 <- rbind(df_reviewsDate12, df_reviewsDate12_2))
+```
+
+```{r}
+#get the user ratings
+reviews_rating12 <- movie12 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+
+
+#subset the ratings to get only 25
+(sub_reviewsRating12 <- reviews_rating12[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split12 <- unlist(strsplit(sub_reviewsRating12, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate12 <- rate_split12[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating12 <- data.frame (Rating = splitRate12))
+```
+
+```{r}
+#get the user ratings
+reviews_rating12_2 <- movie12_2 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+
+#subset the ratings to get only 25
+(sub_reviewsRating12_2 <- reviews_rating12_2[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split12_2 <- unlist(strsplit(sub_reviewsRating12_2, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate12_2 <- rate_split12_2[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating12_2 <- data.frame (Rating = splitRate12_2))
+```
+
+```{r}
+#combine into one row
+(rating12 <- rbind(df_rating12,df_rating12_2))
+```
+
+```{r}
+#get the contents of the reviews
+review_text12 <- movie12 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text12
+
+#set as data frame.
+(df_reviewText12 <- data.frame(TextReview = review_text12))
+```
+
+```{r}
+#get the contents of the reviews
+review_text12_2 <- movie12_2 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text12_2
+
+#set as data frame.
+(df_reviewText12_2 <- data.frame(TextReview = review_text12_2))
+```
+
+```{r}
+#combine into one frame
+(textRev12 <- rbind(df_reviewText12,df_reviewText12_2))
+```
+
+```{r}
+#get the review title.
+review_title12 <- movie12 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title12
+
+#subset the review title get only 25
+(sub_titrev12 <- review_title12[1:25])
+
+(review_split12 <- unlist(strsplit(sub_titrev12, "\n")))
+
+#set as data frame
+(df_reviewTitle12 <- data.frame(TitleReview = review_split12))
+```
+
+```{r}
+#get the review title.
+review_title12_2 <- movie12_2 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title12_2
+
+#subset the review title get only 25
+(sub_titrev12_2 <- review_title12_2[1:25])
+
+(review_split12_2 <- unlist(strsplit(sub_titrev12_2, "\n")))
+
+#set as data frame
+(df_reviewTitle12_2 <- data.frame(TitleReview = review_split12_2))
+```
+
+```{r}
+#combine into one row
+(titleRev12 <- rbind(df_reviewTitle12, df_reviewTitle12_2))
+```
+
+```{r}
+#combined the outputs of the first movie in a data frame
+(df_movie12 <- data.frame(Title = twelveth_title,
+                        nameRev12,
+                        rating12,                    
+                        dateRev12,
+                        textRev12,
+                        titleRev12)
+)
+```
+
+```{r}
+library(polite)
+library(rvest)
+
+#13th movie url for the the name of the reviewer.
+movie13_url <- "https://www.imdb.com/title/tt11057302/reviews?sort=curated&dir=asc&ratingFilter=0"
+session_Mov13 <- bow(movie13_url, user_agent = "educational purposes")
+
+movie13 <- read_html(movie13_url)
+
+movie13_url2 <- "https://www.imdb.com/title/tt11057302/reviews?sort=curated&dir=desc&ratingFilter=0"
+session_Mov13_2 <- bow(movie13_url2, user_agent = "educational purposes")
+
+movie13_2 <- read_html(movie13_url2)
+```
+
+```{r}
+#geting the 13th movie title to include it for the data frame.
+(thirteenth_title <- sub_movie[13])
+
+#get the reviewer's name.
+reviewer13 <- movie13 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer13
+
+#set as data frame
+(df_reviewer13 <- data.frame(Name = reviewer13))
+```
+
+```{r}
+#get the reviewer's name.
+reviewer13_2 <- movie13_2 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer13_2
+
+#set as data frame
+(df_reviewer13_2 <- data.frame(Name = reviewer13_2))
+```
+
+```{r}
+#combine the output into one row
+(nameRev13 <- rbind(df_reviewer13,df_reviewer13_2))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date13 <- movie13 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame
+(df_reviewsDate13 <- data.frame(DateReview = reviews_date13))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date13_2 <- movie13_2 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame 
+(df_reviewsDate13_2 <- data.frame(DateReview = reviews_date13_2))
+
+#combine the output into one row
+(dateRev13 <- rbind(df_reviewsDate13, df_reviewsDate13_2))
+```
+
+```{r}
+#get the user ratings
+reviews_rating13 <- movie13 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating13
+
+#subset the ratings to get only 25
+(sub_reviewsRating13 <- reviews_rating13[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split13 <- unlist(strsplit(sub_reviewsRating13, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate13 <- rate_split13[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating13 <- data.frame (Rating = splitRate13))
+```
+
+```{r}
+#get the user ratings
+reviews_rating13_2 <- movie13_2 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating13_2
+
+#subset the ratings to get only 25
+(sub_reviewsRating13_2 <- reviews_rating13_2[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split13_2 <- unlist(strsplit(sub_reviewsRating13_2, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate13_2 <- rate_split13_2[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating13_2 <- data.frame (Rating = splitRate13_2))
+```
+
+```{r}
+#combine into one row
+(rating13 <- rbind(df_rating13,df_rating13_2))
+```
+
+```{r}
+#get the contents of the reviews
+review_text13 <- movie13 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text13
+
+#set as data frame.
+(df_reviewText13 <- data.frame(TextReview = review_text13))
+```
+
+```{r}
+#get the contents of the reviews
+review_text13_2 <- movie13_2 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text13_2
+
+#set as data frame.
+(df_reviewText13_2 <- data.frame(TextReview = review_text13_2))
+```
+
+```{r}
+#combine into one frame
+(textRev13 <- rbind(df_reviewText13,df_reviewText13_2))
+```
+
+```{r}
+#get the review title.
+review_title13 <- movie13 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title13
+
+#subset the review title get only 25
+(sub_titrev13 <- review_title13[1:25])
+
+(review_split13 <- unlist(strsplit(sub_titrev13, "\n")))
+
+#set as data frame
+(df_reviewTitle13 <- data.frame(TitleReview = review_split13))
+```
+
+```{r}
+#get the review title.
+review_title13_2 <- movie13_2 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title13_2
+
+#subset the review title get only 25
+(sub_titrev13_2 <- review_title13_2[1:25])
+
+(review_split13_2 <- unlist(strsplit(sub_titrev13_2, "\n")))
+
+#set as data frame
+(df_reviewTitle13_2 <- data.frame(TitleReview = review_split13_2))
+```
+
+```{r}
+#combine into one row
+(titleRev13 <- rbind(df_reviewTitle13, df_reviewTitle13_2))
+```
+
+```{r}
+#combined the outputs of the first movie in a data frame
+(df_movie13 <- data.frame(Title = thirteenth_title,
+                        nameRev13,
+                        rating13,                    
+                        dateRev13,
+                        textRev13,
+                        titleRev13)
+)
+```
+
+```{r}
+library(polite)
+library(rvest)
+
+#14th movie url for the the name of the reviewer.
+movie14_url <- "https://www.imdb.com/title/tt6259380/reviews?sort=curated&dir=desc&ratingFilter=0"
+session_Mov14 <- bow(movie14_url, user_agent = "educational purposes")
+
+movie14 <- read_html(movie14_url)
+
+movie14_url2 <- "https://www.imdb.com/title/tt6259380/reviews?sort=curated&dir=asc&ratingFilter=0"
+session_Mov14_2 <- bow(movie14_url, user_agent = "educational purposes")
+
+movie14_2 <- read_html(movie14_url2)
+```
+
+```{r}
+#geting the 14th movie title to include it for the data frame.
+(fourteenth_title <- sub_movie[14])
+
+#get the reviewer's name.
+reviewer14 <- movie14 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer14
+
+#set as data frame
+(df_reviewer14 <- data.frame(Name = reviewer14))
+```
+
+```{r}
+#get the reviewer's name.
+reviewer14_2 <- movie14_2 %>%
+  html_nodes("span.display-name-link") %>%
+  html_text()
+reviewer14_2
+
+#set as data frame
+(df_reviewer14_2 <- data.frame(Name = reviewer14_2))
+```
+
+```{r}
+#combine the output into one row
+(nameRev14 <- rbind(df_reviewer14,df_reviewer14_2))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date14 <- movie14 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame
+(df_reviewsDate14 <- data.frame(DateReview = reviews_date14))
+```
+
+```{r}
+#get the the date of reviews
+reviews_date14_2 <- movie14_2 %>%
+  html_nodes("span.review-date") %>%
+  html_text()
+
+#set as data frame 
+(df_reviewsDate14_2 <- data.frame(DateReview = reviews_date14_2))
+```
+
+```{r}
+#combine the output into one row
+(dateRev14 <- rbind(df_reviewsDate14, df_reviewsDate14_2))
+```
+
+```{r}
+#get the user ratings
+reviews_rating14 <- movie14 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating14
+
+#subset the ratings to get only 25
+(sub_reviewsRating14 <- reviews_rating14[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split14 <- unlist(strsplit(sub_reviewsRating14, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate14 <- rate_split14[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating14 <- data.frame (Rating = splitRate4))
+```
+
+```{r}
+#get the user ratings
+reviews_rating14_2 <- movie14_2 %>%
+  html_nodes("div.ipl-ratings-bar") %>%
+  html_text()
+reviews_rating14_2
+
+#subset the ratings to get only 25
+(sub_reviewsRating14_2 <- reviews_rating14_2[1:50])
+
+#split the output to get on;y the rates without the \n.
+(rate_split14_2 <- unlist(strsplit(sub_reviewsRating14_2, "\\s+")))
+
+#select only the ratings to exclude the white space
+(splitRate14_2 <- rate_split14_2[c(2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50)])
+
+#set as data frame
+(df_rating14_2 <- data.frame (Rating = splitRate14_2))
+```
+
+```{r}
+#combine into one row
+(rating14 <- rbind(df_rating14,df_rating14_2))
+```
+
+```{r}
+#get the contents of the reviews
+review_text14 <- movie14 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text14
+
+#set as data frame.
+(df_reviewText14 <- data.frame(TextReview = review_text14))
+```
+
+
+```{r}
+#get the contents of the reviews
+review_text14_2 <- movie14_2 %>%
+  html_nodes("div.text.show-more__control") %>%
+  html_text()
+review_text14_2
+
+#set as data frame.
+(df_reviewText14_2 <- data.frame(TextReview = review_text14_2))
+```
+
+```{r}
+#combine into one frame
+(textRev14 <- rbind(df_reviewText14,df_reviewText14_2))
+```
+
+```{r}
+#get the review title.
+review_title14 <- movie14 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title14
+
+#subset the review title get only 25
+(sub_titrev14 <- review_title14[1:25])
+
+(review_split14 <- unlist(strsplit(sub_titrev14, "\n")))
+
+#set as data frame
+(df_reviewTitle14 <- data.frame(TitleReview = review_split14))
+```
+
+```{r}
+#get the review title.
+review_title14_2 <- movie14_2 %>%
+  html_nodes("a.title") %>%
+  html_text()
+review_title14_2
+
+#subset the review title get only 25
+(sub_titrev14_2 <- review_title14_2[1:25])
+
+(review_split14_2 <- unlist(strsplit(sub_titrev14_2, "\n")))
+
+#set as data frame
+(df_reviewTitle14_2 <- data.frame(TitleReview = review_split14_2))
+```
+
+```{r}
+#combine into one row
+(titleRev14 <- rbind(df_reviewTitle14, df_reviewTitle14_2))
+```
+
+```{r}
+#combined the outputs of the first movie in a data frame
+(df_movie14 <- data.frame(Title = fourteenth_title,
+                        nameRev14,
+                        rating14,                    
+                        dateRev14,
+                        textRev14,
+                        titleRev14)
+)
+```
+
+```{r}
+moviesRev11234 <- rbind(df_movie11, df_movie12, df_movie13, df_movie14)
+moviesRev11234
+```
+
+
+```{r}
+write.csv(moviesRev11234, "IMDBmoviesReviews(4th_200).csv")
+
+read.csv("IMDBmoviesReviews(4th_200).csv")
+```
 
 
 
