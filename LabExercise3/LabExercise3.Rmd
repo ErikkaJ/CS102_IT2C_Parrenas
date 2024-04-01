@@ -60,25 +60,25 @@ session_Mov4 <- bow(movie4_url, user_agent = "educational purposes")
 movie4 <- read_html(movie4_url)
 
 #5th movie url for the name of the reviewer.
-movie5_url <- "https://www.imdb.com/title/tt0080684/reviews?ref_=tt_urv"
+movie5_url <- "https://www.imdb.com/title/tt15239678/reviews?ref_=tt_urv"
 session_Mov5 <- bow(movie5_url, user_agent = "educational purposes")
 
 movie5 <- read_html(movie5_url)
 
 #6th movie url for the name of the reviewer.
-movie6_url <- "https://www.imdb.com/title/tt0133093/reviews?ref_=tt_urv"
+movie6_url <- "https://www.imdb.com/title/tt0080684/reviews?ref_=tt_urv"
 session_Mov6 <- bow(movie6_url, user_agent = "educational purposes")
 
 movie6 <- read_html(movie6_url)
 
 #7th movie url for the name of the reviewer.
-movie7_url <- "https://www.imdb.com/title/tt0099685/reviews?ref_=tt_urv"
+movie7_url <- "https://www.imdb.com/title/tt0133093/reviews?ref_=tt_urv"
 session_Mov7 <- bow(movie7_url, user_agent = "educational purposes")
 
 movie7 <- read_html(movie7_url)
 
 #8th movie url for the name of the reviewer.
-movie8_url <- "https://www.imdb.com/title/tt15239678/reviews?ref_=tt_urv"
+movie8_url <- "https://www.imdb.com/title/tt0099685/reviews?ref_=tt_urv"
 session_Mov8 <- bow(movie8_url, user_agent = "educational purposes")
 
 movie8 <- read_html(movie8_url)
@@ -174,6 +174,12 @@ df_movie1
 ```
 
 ```{r}
+write.csv(df_movie1, "Movie1.csv")
+
+read.csv("Movie1.csv")
+```
+
+```{r}
 library(rvest)
 #geting the 2nd movie title to include it for the data frame.
 second_title <- sub_movie[2]
@@ -247,6 +253,12 @@ df_movie2 <- data.frame(Movie_title = second_title,
                        TitleReviews = review_split2
                        )
 df_movie2
+```
+
+```{r}
+write.csv(df_movie2, "Movie2.csv")
+
+read.csv("Movie2.csv")
 ```
 
 ```{r}
@@ -325,6 +337,12 @@ df_movie3 <- data.frame(Movie_title = third_title,
 df_movie3
 ```
 ```{r}
+write.csv(df_movie3, "Movie3.csv")
+
+read.csv("Movie3.csv")
+```
+
+```{r}
 library(rvest)
 
 #geting the 4th movie title to include it for the data frame.
@@ -399,6 +417,12 @@ df_movie4 <- data.frame(Movie_title = fourth_title,
                        TitleReviews = review_split4
                        )
 df_movie4
+```
+
+```{r}
+write.csv(df_movie4, "Movie4.csv")
+
+read.csv("Movie4.csv")
 ```
 
 ```{r}
@@ -478,6 +502,12 @@ df_movie5
 ```
 
 ```{r}
+write.csv(df_movie5, "Movie5.csv")
+
+read.csv("Movie5.csv")
+```
+
+```{r}
 library(rvest)
 
 #geting the 6th movie title to include it for the data frame.
@@ -551,6 +581,12 @@ df_movie6 <- data.frame(Movie_title = sixth_title,
                        TitleReviews = review_split6
                        )
 df_movie6
+```
+
+```{r}
+write.csv(df_movie6, "Movie6.csv")
+
+read.csv("Movie6.csv")
 ```
 
 ```{r}
@@ -630,6 +666,12 @@ df_movie7
 ```
 
 ```{r}
+write.csv(df_movie7, "Movie7.csv")
+
+read.csv("Movie7.csv")
+```
+
+```{r}
 library(rvest)
 
 #geting the 6th movie title to include it for the data frame.
@@ -703,6 +745,12 @@ df_movie8 <- data.frame(Movie_title = eight_title,
                        TitleReviews = review_split8
                        )
 df_movie8
+```
+
+```{r}
+write.csv(df_movie8, "Movie8.csv")
+
+read.csv("Movie8.csv")
 ```
 
 ```{r}
@@ -782,6 +830,12 @@ df_movie9
 ```
 
 ```{r}
+write.csv(df_movie9, "Movie9.csv")
+
+read.csv("Movie9.csv")
+```
+
+```{r}
 library(rvest)
 
 #geting the 6th movie title to include it for the data frame.
@@ -856,6 +910,13 @@ df_movie10 <- data.frame(Movie_title = tenth_title,
                        )
 df_movie10
 ```
+
+```{r}
+write.csv(df_movie10, "Movie10.csv")
+
+read.csv("Movie10.csv")
+```
+
 ```{r}
 movies_df <- rbind( df_movie1, 
                   df_movie2,
